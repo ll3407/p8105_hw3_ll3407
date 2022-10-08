@@ -1,0 +1,57 @@
+---
+title: "p8105_hw3_LL3407"
+Name: Liping Lu
+Uni:  LL3407
+output: github_document
+date: "2022-10-07"
+---
+
+```{r}
+library(p8105.datasets)
+data("instacart")
+
+library(tidyverse)
+library(ggridges)
+```
+## Problem 1
+```{r}
+ins_df = 
+  instacart %>% 
+  janitor::clean_names() %>% 
+  group_by(aisle) %>% 
+  summarize(nobs=n()) 
+  maximum = ins_df %>% filter(nobs==max(nobs)) %>% view() 
+```
+
+* There are 134 aisles in total.   
+* The "fresh vegetables" aisle is the most ordered from. 
+
+```{r}
+ins_df2 = 
+  instacart %>% 
+  janitor::clean_names() %>% 
+  count(aisle) %>% 
+  filter(n>10000) %>%
+  mutate(number=as.numeric(n))
+
+```
+
+```{r,fig.width=10,fig.asp=5}
+
+
+ins_high_scatter = 
+    ins_df2%>% 
+    ggplot(aes(x=aisle, y=number, color=aisle))+
+    geom_point()+
+    labs(
+      title = "The aisles with more than 10000 items ordered"
+      
+    )
+
+ggsave(file = "./Results/ins_high_scatter.pdf",
+       plot = ins_high_scatter,
+       width=10, 
+       height=5)
+
+```
+
